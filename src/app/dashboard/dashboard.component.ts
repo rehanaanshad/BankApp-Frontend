@@ -23,7 +23,17 @@ export class DashboardComponent implements OnInit {
   currentAcno:string=''; //to hold the current Acno
   isCollapse: boolean=false
 constructor(private fb:FormBuilder, private api:ApiService,private logoutRouter:Router){}
-  ngOnInit(): void {
+  
+
+
+ngOnInit(): void {
+
+
+  if(!localStorage.getItem("token")){
+    alert("please login")
+    this.logoutRouter.navigateByUrl('')
+  }
+
     if(localStorage.getItem('currentUser')){
     this.user=localStorage.getItem('currentUser')||'';//current user
     }
