@@ -1,0 +1,86 @@
+<!--navbar-->
+<nav class="navbar navbar-light" style="background-color:#ffc107ad;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" >
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnlrZmVnM3IxYWVkbDBqb3lyOXVxZGx3NGhveDhjNHl4enVpeGRlaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/V57jUkC3eZFsym7iwE/giphy.gif" alt="" width="40" height="30" class="d-inline-block align-text-top">
+        UNION BANK 
+      </a>
+    </div>
+  </nav>
+
+  <!--register landing page-->
+  <div *ngIf="RegisterSuccess"  class="container text-center mt-1">
+    
+    <h3>Your Data Getting Registered..Please Wait...
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </h3>
+  </div>
+
+<!--login form-->
+<div *ngIf="!RegisterSuccess" class="container">
+    <div class="row">
+    <div  class="col-6 mt-5 " >
+       <!--img-->
+       <img src="https://increasebilling.com/assets/img/bank-card.png" width="500" height="450">
+    </div>
+    <div class="col-6 mt-5">
+        <!--login form-->
+        <form (ngSubmit)="register()" [formGroup]="registerForm" class="mt-1 border  p-4 rounded shadow">
+            <h3 class="text-center text-primary mb-4">Register here.....</h3>
+            <!-- Account Number -->
+            <div data-mdb-input-init class="form-outline mb-4">
+              <label class="form-label" for="form1Examp1">Account Number</label>
+              <input name="acno" formControlName="acno" type="text" id="form1Examp1" class="form-control" />
+              <div *ngIf="this.registerForm.get('acno')?.errors&&this.registerForm.get('acno')?.touched" class="text-danger">*Invalid Account Number</div>
+            </div>
+            <!-- user Name -->
+            <div data-mdb-input-init class="form-outline mb-4">
+              <label class="form-label" for="form1Example1">User Name</label>
+              <input name="username" formControlName="username" type="text" id="form1Example1" class="form-control" />
+              <div *ngIf="this.registerForm.get('username')?.errors&&this.registerForm.get('username')?.touched" class="text-danger">*Invalid Username</div>
+            </div>
+          
+            <!-- Password input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+              <label class="form-label" for="form1Example2">Password</label>
+              <input name="password" formControlName="password" id="form1Example2" class="form-control" />
+              <div *ngIf="this.registerForm.get('password')?.errors&&this.registerForm.get('password')?.touched" class="text-danger">*Invalid Password Format</div>
+            </div>
+          
+            <!-- 2 column grid layout for inline styling -->
+            <div class="row mb-4">
+              <div class="col">
+                <!-- Checkbox -->
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
+                  <label class="form-check-label" for="form1Example3"> Remember me </label>
+                </div>
+              </div>
+          
+              
+            </div>
+            <div class="text-center">
+              <h3 class="text-danger">{{RegisterError}}</h3>
+                 <!-- Submit button -->
+            <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block">Sign up</button>
+            <p>Already have an Account? <a routerLink="">Please login</a></p>
+            </div>
+           
+          </form>
+    </div>
+    </div>
+
+</div>
+
+<!--footer-->
+
+<footer class="bg-warning text-center text-lg-start mt-5">
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color:#ffc107e1;">
+      © 2024 Copyright:
+      <a class="text-body" href="https://mdbootstrap.com/">unionbank.com</a>
+    </div>
+    <!-- Copyright -->
+  </footer>

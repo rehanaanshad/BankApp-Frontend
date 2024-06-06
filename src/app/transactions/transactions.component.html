@@ -1,0 +1,65 @@
+<!--navbar-->
+<nav class="navbar navbar-light" style="background-color:#ffc107b7">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" >
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnlrZmVnM3IxYWVkbDBqb3lyOXVxZGx3NGhveDhjNHl4enVpeGRlaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/V57jUkC3eZFsym7iwE/giphy.gif" alt="" width="40" height="30" class="d-inline-block align-text-top">
+        UNION BANK 
+      </a>
+    </div>
+  </nav>
+
+
+  <!--main content-->
+  <div class="container">
+    <div class="row">
+        <h2 class="text-dark text-center mt-3">Transaction History</h2>
+        <div class="col-6 mt-3">
+            <input [(ngModel)]="searchTerm" type="text" placeholder="Search..." class="form-control"/>
+        </div>
+        <div class="col-6 mt-3">
+            <button style="float: right;" (click)="generatePdf()" class="btn btn-info">Export to Pdf</button>
+        </div>
+    </div>
+
+    <div class="row-table">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Type</th>
+                <th scope="col">From Account</th>
+                <th scope="col">To Account</th>
+                <th scope="col">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-active" *ngFor="let trans of transactions | search:searchTerm:'type' ; let i=index">
+                <th scope="row">{{i+1}}</th>
+                <td>{{trans.type}}</td>
+                <td>{{trans.fromAcno}}</td>
+                <td>{{trans.toAcno}}</td>
+                <td>{{trans.amount}}</td>
+              </tr>
+              
+            </tbody>
+          </table>
+          
+
+    </div>
+  </div>
+
+
+
+
+
+
+  <!--footer-->
+
+<footer class="bg-warning text-center text-lg-start mt-5">
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color:#ffc107e1">
+      © 2024 Copyright:
+      <a class="text-body" href="https://mdbootstrap.com/">unionbank.com</a>
+    </div>
+    <!-- Copyright -->
+  </footer>

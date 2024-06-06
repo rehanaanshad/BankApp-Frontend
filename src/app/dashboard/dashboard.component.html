@@ -1,0 +1,140 @@
+<app-delete-acno [deleteAcno]="acno" (onCancel)="cancelDeleteConfirm()" (onDelete)="deleteFromParent()"></app-delete-acno>
+
+<div *ngIf="deleteSuccessMsg">
+  <h1 class="text-center text-success mx-3">{{deleteSuccessMsg}}</h1>
+</div>
+<div *ngIf="!deleteConfirmStatus">
+
+
+  <nav class="navbar navbar-expand-lg bg-warning">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" >
+            <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnlrZmVnM3IxYWVkbDBqb3lyOXVxZGx3NGhveDhjNHl4enVpeGRlaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/V57jUkC3eZFsym7iwE/giphy.gif" alt="" width="40" height="30" class="d-inline-block align-text-top">
+            UNION BANK 
+          </a>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ms-auto me-5">
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle me-5"  id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Services
+            </a>
+            <ul class="dropdown-menu mt-2" aria-labelledby="navbarDropdownMenuLink">
+              <li><a (click)="getBalance()" class="dropdown-item" data-bs-toggle="offcanvas" href="#offcanvasExample"><i class="fa-solid fa-money-check-dollar fa-fade me-2 text-info"></i>Balance Enquiry</a></li>
+              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-money-bill-transfer fa-fade me-2 text-info"></i>Fund Transfer</a></li>
+              <li><a routerLink="/transactions" class="dropdown-item" ><i class="fa-solid fa-note-sticky fa-fade me-2 text-info"></i>Transaction History</a></li>
+              <li><a (click)="deleteAccount()" class="dropdown-item" ><i class="fa-solid fa-trash fa-fade me-2 text-info"></i>Remove Account</a></li>
+              <li><a (click)="logout()" class="dropdown-item" ><i class="fa-solid fa-right-from-bracket fa-fade me-2 text-info"></i>Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Fund Transfer</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form  [formGroup]="FundTransferForm">
+        <div class="modal-body">
+            <div class="form-floating mb-3">
+                <input type="email" name="creditAcno" formControlName="creditAcno" class="form-control" id="floatingInput" placeholder="Credit Account Number">
+                
+                <label for="floatingInput">Credit Account Number</label>
+                <div *ngIf="this.FundTransferForm.get('creditAcno')?.errors&&this.FundTransferForm.get('creditAcno')?.touched" class="text-danger">*Invalid Data</div>
+              </div>
+            <div class="form-floating mb-3">
+                <input type="email" name="amount" formControlName="amount" class="form-control" id="floatingInput" placeholder="Amount">
+                <label for="floatingInput">Amount</label>
+                <div *ngIf="this.FundTransferForm.get('amount')?.errors&&this.FundTransferForm.get('amount')?.touched" class="text-danger">*Invalid Amount</div>
+              </div>
+              <div class="form-floating">
+                <input type="password" name="password" formControlName="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+                <div *ngIf="this.FundTransferForm.get('password')?.errors&&this.FundTransferForm.get('password')?.touched" class="text-danger">*Invalid password</div>
+              </div>
+        </div>
+        <!--result-->
+        <div class="text-success fw-bolder text-center mx-2">
+          {{transferSuccess}}
+
+        </div> 
+        <div class="text-success fw-bolder text-center mx-2">
+          {{transferError}}
+
+        </div> 
+       
+        <div class="text-center my-2 d-flex justify-content-evenly">
+          <button type="submit" (click)="reset()" class="btn btn-danger">Reset</button>
+          <button  type="submit" (click)="dashboardForm()" class="btn btn-primary">Transfer</button>
+        <button type="submit"  class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!--offcanvas-->
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Balance Enquiry</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+
+        <img  width="100%" height="200px" src="https://images.pexels.com/photos/128867/coins-currency-investment-insurance-128867.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
+      <h5>Hey {{user}},</h5>
+      <h6>Your Current Balance is :<span class="text-success">{{balance}}</span></h6>
+      
+    
+  </div>
+</div> 
+
+<!--Main Content-->
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <!--image-->
+                <img width="100%" height="485px" src="https://i.pinimg.com/originals/89/67/92/8967925b9d9141e88ced0a9020bdbc5e.gif">
+            </div>
+            <div class="col-6">
+                <!--heading and texts-->
+                <h1>Welcome {{user}}</h1>
+                <p style="text-align:justify">Online banking allows you to conduct financial transactions through the Internet. Online banking offers customers almost every service traditionally available through a local branch including deposits, transfers, and online bill payments.</p>
+                <div class="collapse" id="collapseExample">
+                    <div  style="text-align:justify">
+                        Internet banking provides personal and corporate banking services offering features such as making electronic payments, viewing account balances, obtaining statements, checking recent transactions and transferring money between accounts.
+                    </div>
+                  </div>
+                <button (click)="collapse()" data-bs-toggle="collapse" data-bs-target="#collapseExample" class="btn btn-primary">Read 
+                    <span *ngIf="!isCollapse">More</span>
+                    <span *ngIf="isCollapse">Less</span>
+                    </button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+  <!--footer-->
+
+<footer class="bg-warning text-center text-lg-start mt-5">
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color:#ffc107e1">
+      © 2024 Copyright:
+      <a class="text-body" href="https://mdbootstrap.com/">unionbank.com</a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+
+  </div>

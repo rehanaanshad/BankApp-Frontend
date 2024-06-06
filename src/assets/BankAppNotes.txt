@@ -1,0 +1,252 @@
+                                                 
+
+                          Bank App
+
+            -------------------------------------
+
+            1.Create a new project -  ng new bankapp-frontend
+            2. cd bankapp-frontend
+            3. code .
+            4. Run the project - ng s -o  or ng serve --open
+            5.Clear the code in app.component.html
+            6. install 3rd party libraries
+                    i) Bootstrap - copy and paste bootstrap link in index.html
+                    ii) fontawesome - copy and paste cdnjs link in index.html
+                    iii) google fonts - copy and pase google fonts link in style.css
+
+            7.create components
+              ->Register - ng g c register
+              ->Login - ng g c login
+              ->Dashboard - ng g c dashboard
+              ->Transactions - ng g c transactions
+              ->PageNotFound - ng g c pageNotFound
+
+            8. Page setup
+                in app.routing.module.ts
+                setup path for each component
+                    const routes: Routes = [
+
+  //login - localhost://4200 -login page
+  {
+    path:'',component:LoginComponent
+  },
+  //register - localhost://4200/register
+  {
+    path:'register',component:RegisterComponent
+  },
+  //dashboard - localhost://4200/dashboard
+  {
+    path:'dashboard',component:DashboardComponent
+  },
+  //transaction - localhost://4200/transaction
+  {
+    path:'transactions',component:TransactionsComponent
+  },
+  //pagenotfound - localhost://4200/pagenotfound
+  {
+    path:'**',component:PageNotFoundComponent
+  }
+];
+
+        9. in app.component.html
+                <router-outlet></router-outlet>
+                to show the path for each page
+                http://localhost:4200/  -login works!
+                http://localhost:4200/dashboard  -  dashboard works!
+
+        10. page designing 
+
+        11.Routerlink :  links to the page
+             <p>Already have an Account? <a routerLink="">Please login</a></p>
+             <p>New to here? <a routerLink="register">Please Register</a></p>
+             <div>
+        <button routerLink="" class="btn btn-primary">Back to site</button>
+    </div>
+
+    12.Reactive Forms  : (for form validation)  
+            
+            Reactive forms provide a model-driven approach to handling form inputs 
+            whose values change over time. 
+            Reactive forms are built around observable streams, where form inputs and 
+            values are provided as streams of input values, which can be accessed synchronously.
+
+    go to app.module.ts and paste this
+
+        import { ReactiveFormsModule } from '@angular/forms';
+
+              @NgModule({
+                imports: [
+                  // other imports ...
+                  ReactiveFormsModule
+                ],
+              })
+              export class AppModule { }
+                      
+      -> formGroup -ts file
+      -> formArray -ts file
+      ->formControl -html 
+
+      ->formBuilder
+      The FormBuilder provides syntactic sugar that shortens creating instances 
+      of a FormControl, FormGroup, or FormArray.
+       It reduces the amount of boilerplate needed to build complex forms.
+    
+    in register.ts
+              export class RegisterComponent {
+          constructor(private fb:FormBuilder){}
+        }
+    -> formGroup -ts
+     Constructs a new FormGroup instance. Accepts a single generic
+      argument, which is an object containing all the keys and
+       corresponding inner control types.  
+       
+       registerForm=this.fb.group({
+    
+  }) 
+
+constructor(private fb:FormBuilder){}
+  registerForm=this.fb.group({//formGroup
+    username:[''],//form array
+    acno:[''],
+    password:[''],
+  })
+  //form control passed to html form
+  go to register.html page
+  in form tag
+   <form [formGroup]="registerForm"
+
+   also in input tag add two attributes to the form
+   name tag and formControlName tag
+     <input name="acno" formControlName="acno"
+     <input name="username" formControlName="username"
+      <input name="password" formControlName="password"
+
+
+      ->*ngIf="condition"
+
+      <label class="form-label" for="form1Examp1">Account Number</label>
+              <input name="acno" formControlName="acno" type="text" id="form1Examp1" class="form-control" />
+              <div *ngIf="this.registerForm.get('acno')?.errors&&this.registerForm.get('acno')?.touched" class="text-danger">*Invalid Account Number</div>
+            </div>
+
+             <div *ngIf="this.registerForm.get('acno')?.errors&&this.registerForm.get('acno')?.touched" class="text-danger">*Invalid Account Number</div>
+
+
+
+
+
+
+             code for search options 
+
+             created a pipes in frontend terminal - ng g p pipes/search
+
+
+search.pipes.ts
+
+             import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'search'
+})
+export class SearchPipe implements PipeTransform {
+
+  transform(allTransactions:any[],searchTerm:string,propsName:string): any[] {
+    
+    const result:any[] = [];
+    if(!allTransactions||searchTerm=='' || propsName==''){
+      return allTransactions
+    }
+
+    allTransactions.forEach((item:any)=>{
+      if(item[propsName].trim().toLowerCase().includes(searchTerm.trim().toLowerCase())){
+        result.push(item)
+      }
+    })
+    return result;
+  }
+
+}
+
+app.module.ts
+import
+FormsModule
+
+transaction.ts
+searchTerm: string='';
+
+transaction.html
+<input [(ngModel)]="searchTerm" type="text" placeholder="Search..." class="form-control"/>
+
+
+<tr class="table-active" *ngFor="let trans of transactions | search:searchTerm:'type' ; let i=index">
+
+
+Export to pdf
+
+open terminal bankapp-frontend
+npm i jspdf jspdf-autotable
+
+go to transaction.ts
+  import jspdf from 'jspdf';
+  import 'jspdf-autotable'
+
+  ngOnInit(): void {
+   this.api.transactionHistory().subscribe((result:any)=>{
+    console.log(result);//array of transaction
+    this.transactions=result.transactions
+    console.log(this.transactions);
+   },
+   (result:any)=>{
+    console.log(result.error.message);
+   }
+  )
+  }
+
+  //generate pdf
+  generatePdf(){
+    //1 create an object for jspdf
+    var pdf = new jspdf();
+
+    //2 setup row for the table
+    let thead = ['Type','from Account','To Account','Amount']
+    let tbody = []
+
+    //3.setup properties for the table
+    pdf.setFontSize(16)
+    pdf.text('Mini Statement',15,10)
+
+    //4 To display as table,we need to convert array of object into nested array
+    for(let item of this.transactions){
+      let temp = [item.type,item.fromAcno,item.toAcno,item.amount]//nested array
+      tbody.push(temp)
+    }
+    //5.convert nested array into table structure using jspdf-autotable
+    (pdf as any).autoTable(thead,tbody)
+
+    //6.to open pdf in another tab
+    pdf.output('dataurlnewwindow')
+
+    //7. T o download/save pdf file
+    pdf.save('TransactionHistory.pdf')
+
+  }
+
+  transaction.html
+
+   <button style="float: right;" (click)="generatePdf()" class="btn btn-info">Export to Pdf</button>
+
+
+   logout logic
+
+dashboard.ts
+logout(){
+  this.logoutRouter.navigateByUrl('')
+  localStorage.clear()
+}
+   constructor(private fb:FormBuilder, private api:ApiService,private logoutRouter:Router){}
+
+   Remove Account
+
+   go to frontend
+   create a delete component -  ng g c deleteAcno
+
